@@ -5,7 +5,7 @@
   --color-primary: #3b82f6;
   --color-primary-hover: #2563eb;
   
-  /* Surface Colors - Light Mode Default */
+  /* Surface Colors */
   --color-surface: #ffffff;
   --color-surface-soft: #f8fafc;
   --color-card: #ffffff;
@@ -19,15 +19,19 @@
   --color-glow: rgba(59, 130, 246, 0.15);
 }
 
-/* DARK MODE LOGIC: These swap when the "dark" class is on the <html> tag */
-.dark {
-  --color-surface: #020617;
-  --color-surface-soft: #0f172a;
-  --color-card: #1e293b;
-  --color-border: #334155;
-  --color-text: #f8fafc;
-  --color-text-muted: #94a3b8;
-  --color-glow: rgba(59, 130, 246, 0.3);
+/* DARK MODE LOGIC */
+@variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  .dark {
+    --color-surface: #020617;
+    --color-surface-soft: #0f172a;
+    --color-card: #1e293b;
+    --color-border: #334155;
+    --color-text: #f8fafc;
+    --color-text-muted: #94a3b8;
+    --color-glow: rgba(59, 130, 246, 0.3);
+  }
 }
 
 @layer base {
@@ -37,6 +41,11 @@
   }
 }
 
-/* Utility to hide scrollbar but keep scrolling for Category Tabs */
-.no-scrollbar::-webkit-scrollbar { display: none; }
-.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+/* Utility to hide scrollbar for Category Tabs */
+@utility no-scrollbar {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
