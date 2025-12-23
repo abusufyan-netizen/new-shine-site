@@ -18,9 +18,12 @@ export default function AdminDashboard() {
     const orderSubscription = supabase
       .channel('public:orders')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'orders' }, (payload) => {
-        setOrders(prev => [payload.new, ...prev]);
-        new Audio('/notification.mp3').play().catch(() => {});
-      }).subscribe();
+        if (payload.new) { // Safety check to ensure data exists
+          setOrders(prev => [payload.new, ...prev]);
+          const audio = new Audio('/notification.mp3');
+          audio.play().catch(e => console.log("Audio play blocked:", e));
+        }
+    }).subscribe();
     return () => supabase.removeChannel(orderSubscription);
   }, []);
 
@@ -47,8 +50,11 @@ export default function AdminDashboard() {
           <div class="header"><h3>NEW SHINE</h3><p>Babu Mehar Town, Lahore</p></div>
           <p>Order: #${order.id}<br>Cust: ${order.customer_name}</p>
           <hr/>
-          ${order.order_details?.map(item => `
-            <div class="flex"><span>${item.qty}x ${item.name} (${item.type})</span><span>Rs.${item.price * item.qty}</span></div>
+          ${(order.order_details || []).map(item => `
+           <div class="flex">
+            <span>${item.qty}x ${item.name} (${item.type})</span>
+            <span>Rs.${item.price * item.qty}</span>
+            </div>
           `).join('')}
           <div class="total flex"><span>TOTAL</span><span>Rs.${order.total_price}</span></div>
           <script>window.print();</script>

@@ -12,7 +12,7 @@ export default function OrderModal({ isOpen, onClose, cartTotal, totalQty, cart 
     address: 'Babu Mehar Town, Lahore',
   });
 
-  const cartItems = Object.values(cart);
+  const cartItems = Object.values(cart || {});
 
   const handleSubmit = async (e) => {
     e.preventDefault();
